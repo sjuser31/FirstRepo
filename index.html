@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Code Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h1>Scan QR Code to Mark Attendance</h1>
+  <div id="reader"></div>
+
+  <script>
+    const qrReader = new Html5Qrcode("reader");
+    qrReader.start({ facingMode: "environment" }, {}, (decodedText) => {
+      // Send scanned QR code (student ID) to server
+      fetch('/scan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ qrCode: decodedText })
+      }).then(res => res.json())
+        .then(data => alert(data.message));
+    });
+  </script>
+</body>
+</html>
